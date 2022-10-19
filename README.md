@@ -6,11 +6,11 @@ If you find Bodega valuable I would really appreciate it if you would consider h
 
 ---
 
-As a born and raised New Yorker I can attest that [bodegas](https://en.wikipedia.org/wiki/Bodega_(store)) act as humble infrastructure for our city, and Bodega aims to do that as well. We appreciate what bodegas do for us, yet it's their simplicity and prevalence that almost makes us forget they're here.
+As a born and raised New Yorker, I can attest that [bodegas](https://en.wikipedia.org/wiki/Bodega_(store)) act as humble infrastructure for our city, and Bodega aims to do that as well. We appreciate what bodegas do for us, yet it's their simplicity and prevalence that almost make us forget they're here.
 
 Bodega is an actor-based library that started as a simple cache based on reading and writing files to/from disk with an incredibly simple API. Today Bodega offers a form of infrastructure that any app's data layer can use. Whether you want to store Codable objects with ease, build caches, or interface with your API or services like CloudKit, it all works in just a few lines of code.
 
-Bodega's `StorageEngine` is at the heart of what's possible. Conforming any database, persistence layer, or even an API server, to the `StorageEngine` protocol automatically provides an incredibly simple data layer for your app thanks to Bodega's `ObjectStorage`. Rather than `Data` and databases developers interact with their app's Swift types no matter what those may be, have a unified API, and concurrency handled out of the box.
+Bodega's `StorageEngine` is at the heart of what's possible. <Rework to your liking, but find some way to use a more direct and active voice to make it easier to read. With a passive voice, you have to parser further into the sentence to get to the point> It presents an incredibly simple data layer in the form of the `StorageEngine` protocol, by abtracting data souces as instances of `ObjectStorage`. Rather than `Data` and databases developers interact with their app's Swift types no matter what those may be, have a unified API, and concurrency handled out of the box.
 
 Bodega is fully usable and useful on its own, but it's also the foundation of [Boutique](https://github.com/mergesort/Boutique). You can find a demo app built atop Boutique in the [Boutique Demo folder](https://github.com/mergesort/Boutique/tree/main/Boutique%20Demo), showing you how to make an offline-ready realtime updating SwiftUI app in only a few lines of code. You can read more about the thinking behind the architecture in this blog post exploring Boutique and the [Model View Controller Store architecture](https://build.ms/2022/06/22/model-view-controller-store).
 
@@ -25,7 +25,7 @@ Bodega is fully usable and useful on its own, but it's also the foundation of [B
 
 ### Getting Started
 
-Bodega provides two types of storage primitives for you, `StorageEngine` and `ObjectStorage`. A `StorageEngine` writes `Data` to a persistence layer, while `ObjectStorage ` works with Swift types that conform to `Codable`. A `StorageEngine` can save items to disk, SQLite, or even your own database, while `ObjectStorage` offers a unified layer over `StorageEngine`s, providing a single API for saving objects to any `StorageEngine` you choose. `Bodega` offers `DiskStorageEngine` and `SQLiteStorageEngine` by default, or you can even build a `StorageEngine` based on your app's server or a service like CloudKit if you want a simple way to interface with your API. You can even compose storage engines to create a complex data pipeline that hits your API and saves items into a database, all in one API call. The possibilities are endless.
+Bodega provides two types of storage primitives for you, `StorageEngine` and `ObjectStorage`. `StorageEngine` <reads and?> writes `Data` <from and?> to <respectively (or find a more generic term? - serializes?)> a persistence layer, while `ObjectStorage ` works with Swift types that conform to `Codable`. `StorageEngine` can save items to disk, SQLite, or even your own database, while `ObjectStorage` offers a unified layer over <one or more instances of?> `StorageEngine<`s delete 's if you agree with previous edit>, providing a single API for saving objects to any `StorageEngine` <instance or configuration that?> you choose. `Bodega` offers `DiskStorageEngine` and `SQLiteStorageEngine` by default, and you can even build a custom `StorageEngine` based on your app's server or a service like CloudKit to interface with your API. You can even compose storage engines to create a complex data pipeline that hits your API and saves items into a database, all in one API call. The possibilities are endless!  <endless possibilities deserve an exclamation point!  :-)>
 
 ---
 
@@ -37,7 +37,7 @@ let storage = SQLiteStorageEngine(
     directory: .documents(appendingPath: "Quotes")
 )
 
-// Alternatively Bodega provides a DiskStorageEngine out of the box too.
+// Alternatively, Bodega provides a DiskStorageEngine out of the box.
 // It has the same API but uses the file system to store objects. ¹
 let storage = DiskStorageEngine(
     directory: .documents(appendingPath: "Quotes")
@@ -61,7 +61,7 @@ try await storage.remove(key: Self.testCacheKey)
 
 ¹ The tradeoffs of `SQLiteStorageEngine` vs. `DiskStorageEngine` are discussed in the [StorageEngine documentation](https://mergesort.github.io/Bodega/documentation/bodega/using-storageengines), but `SQLiteStorageEngine` is the suggested default because of it's far superior performance, using the same simple API.
 
-Bodega provides two different instances of `StorageEngine` out of the box, but if you want to build your own all you have to do is conform to the `StorageEngine` protocol. This will allow you to create a `StorageEngine` for any data layer, whether you want to build a `CoreDataStorageEngine`, a `RealmStorageEngine`, a `KeychainStorageEngine`, or even a `StorageEngine` that maps to your API. If you can read, write, or delete data, you can conform to `StorageEngine`.
+Bodega provides `SQLiteStorageEngine` and `DiskStorageEngine` out of the box, but if you want to build your own, all you have to do is conform to the `StorageEngine` protocol. This will allow you to create a `StorageEngine` for any data layer, whether you want to build a `CoreDataStorageEngine`, a `RealmStorageEngine`, a `KeychainStorageEngine`, or even a `StorageEngine` that maps to your API. If you can read, write, or delete data, you can conform to `StorageEngine`.
  
 ```swift
 public protocol StorageEngine: Actor {
@@ -91,7 +91,7 @@ public protocol StorageEngine: Actor {
 
 ### ObjectStorage
 
-Bodega's most common usage is in [Boutique](https://github.com/mergesort/Boutique), but you can also use it as a standalone cache. Any `StorageEngine` can read or write `Data` from your peristence layer, but `ObjectStorage` provides the ability to work with Swift types, as long as they conform to `Codable`. `ObjectStorage` has a very similar API to `DiskStorage`, but with slightly different function names to be more explicit that you're working with objects and not `Data`.
+Bodega is most commonly paired with [Boutique](https://github.com/mergesort/Boutique), but you can also use it as a standalone cache. Any `StorageEngine` <rework this, as IIUC, you need the specific type for your persistence layer> can read or write `Data` from your peristence layer, but `ObjectStorage` provides the ability to work with Swift types - as long as they conform to `Codable`. `ObjectStorage` has a very similar API to `DiskStorage`, but with slightly different function names to be more explicit that you're working with objects and not `Data`.
 
 ```swift
 // Initialize an ObjectStorage object
@@ -114,10 +114,10 @@ try await storage.store(quote, forKey: cacheKey)
 // Read an object
 let readObject: Quote? = await storage.object(forKey: cacheKey)
 
-// Grab all the keys, which at this point will be one key, `cacheKey`.
+// Grab all the keys, which at this point will be one key, `cacheKey` <period or no period, just be consistent - to me the imperative fragments look best>
 let allKeys = await storage.allKeys()
 
-// Verify by calling `keyCount`, both key-related methods are also available on `DiskStorage`.
+// Verify by calling `keyCount`, both key-related methods are also available on `DiskStorage`
 await storage.keyCount()
 
 // Remove an object
@@ -128,7 +128,7 @@ try await storage.removeObject(forKey: cacheKey)
 
 ### Further Exploration
 
-Bodega is very useful as a primitive for interacting with and peristing data, but it's even more powerful when integrated into [Boutique](https://github.com/mergesort/Boutique). Boutique is a `Store` and serves as the foundation of a Model View Controller Store architecture I've developed. MVCS brings together the familiarity and simplicity of the [MVC architecture](https://developer.apple.com/library/archive/documentation/General/Conceptual/DevPedia-CocoaCore/MVC.html) you know and love with the power of a `Store`, to give your app a simple but well-defined state management and data architecture.
+Bodega is very useful as a primitive for interacting with and peristing data, but it's even more powerful when integrated into [Boutique](https://github.com/mergesort/Boutique). Boutique is a `Store` and serves as the foundation of the complementing `Model View Controller Store` (MVCS) architecture. MVCS brings together the familiarity and simplicity of the [MVC architecture](https://developer.apple.com/library/archive/documentation/General/Conceptual/DevPedia-CocoaCore/MVC.html) you know and love with the power of a `Store`, to give your app a simple but well-defined state management and data architecture.
 
 If you'd like to learn more about how it works you can read about the philosophy in a [blog post](https://build.ms/2022/06/22/model-view-controller-store) where I explore MVCS for SwiftUI, and you can find a reference implementation of an offline-ready realtime updating MVCS app powered by Boutique in this [repo](https://github.com/mergesort/MVCS).
 
